@@ -10,7 +10,7 @@ import (
 
 func main() {
 	if len(os.Args) != 2 {
-		os.Stderr.WriteString("expected template argument")
+		fmt.Fprintf(os.Stderr, "usage: gh-tpl <template>\n")
 		os.Exit(1)
 	}
 
@@ -18,12 +18,12 @@ func main() {
 	t := template.New(os.Stdout, ios.TerminalWidth(), ios.ColorEnabled())
 
 	if err := t.Parse(os.Args[1]); err != nil {
-		os.Stderr.WriteString(fmt.Sprintf("error parsing template: %s\n", err.Error()))
+		fmt.Fprintf(os.Stderr, "error parsing template: %s\n", err.Error())
 		os.Exit(1)
 	}
 
 	if err := t.Execute(os.Stdin); err != nil {
-		os.Stderr.WriteString(fmt.Sprintf("error executing template: %s\n", err.Error()))
+		fmt.Fprintf(os.Stderr, "error executing template: %s\n", err.Error())
 		os.Exit(1)
 	}
 }
