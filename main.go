@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/Masterminds/sprig/v3"
 	"github.com/cli/cli/v2/pkg/iostreams"
 	"github.com/cli/go-gh/v2/pkg/template"
 )
@@ -15,7 +16,7 @@ func main() {
 	}
 
 	ios, _, _, _ := iostreams.Test()
-	t := template.New(os.Stdout, ios.TerminalWidth(), ios.ColorEnabled())
+	t := template.New(os.Stdout, ios.TerminalWidth(), ios.ColorEnabled()).Funcs(sprig.FuncMap())
 
 	if err := t.Parse(os.Args[1]); err != nil {
 		fmt.Fprintf(os.Stderr, "error parsing template: %s\n", err.Error())

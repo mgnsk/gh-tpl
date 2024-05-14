@@ -4,6 +4,8 @@ Simple tool to use Github CLI templates on any JSON.
 
 For template functions, see https://cli.github.com/manual/gh_help_formatting.
 
+Also includes the sprig template functions: https://masterminds.github.io/sprig.
+
 # Usage
 
 ```sh
