@@ -7,24 +7,41 @@ import (
 	"github.com/Masterminds/sprig/v3"
 	"github.com/cli/cli/v2/pkg/iostreams"
 	"github.com/cli/go-gh/v2/pkg/template"
+	"github.com/spf13/cobra"
 )
 
 func main() {
-	if len(os.Args) != 2 {
-		fmt.Fprintf(os.Stderr, "usage: gh-tpl <template>\n")
-		os.Exit(1)
+	var forceColor bool
+
+	root := &cobra.Command{
+		Use:        "gh-tpl [template]",
+		Short:      "Render JSON using a go template.",
+		Args:       cobra.ExactArgs(1),
+		ArgAliases: []string{"template"},
+		RunE: func(c *cobra.Command, args []string) error {
+			ios := iostreams.System()
+			if forceColor {
+				ios.SetColorEnabled(true)
+			}
+
+			t := template.New(c.OutOrStdout(), ios.TerminalWidth(), ios.ColorEnabled()).Funcs(sprig.FuncMap())
+
+			if err := t.Parse(args[0]); err != nil {
+				return fmt.Errorf("error parsing template: %w", err)
+			}
+
+			if err := t.Execute(c.InOrStdin()); err != nil {
+				return fmt.Errorf("error executing template: %w", err)
+			}
+
+			return nil
+		},
 	}
 
-	ios, _, _, _ := iostreams.Test()
-	t := template.New(os.Stdout, ios.TerminalWidth(), ios.ColorEnabled()).Funcs(sprig.FuncMap())
+	root.Flags().BoolVar(&forceColor, "color", false, "Force color output")
 
-	if err := t.Parse(os.Args[1]); err != nil {
-		fmt.Fprintf(os.Stderr, "error parsing template: %s\n", err.Error())
-		os.Exit(1)
-	}
-
-	if err := t.Execute(os.Stdin); err != nil {
-		fmt.Fprintf(os.Stderr, "error executing template: %s\n", err.Error())
+	if err := root.Execute(); err != nil {
+		root.PrintErrln(err)
 		os.Exit(1)
 	}
 }
