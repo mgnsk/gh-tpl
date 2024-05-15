@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/Masterminds/sprig/v3"
 	"github.com/cli/cli/v2/pkg/iostreams"
 	"github.com/cli/go-gh/v2/pkg/template"
+	sprig "github.com/go-task/slim-sprig/v3"
 	"github.com/spf13/cobra"
 )
 
