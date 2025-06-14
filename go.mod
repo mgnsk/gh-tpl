@@ -3,7 +3,7 @@ module github.com/mgnsk/gh-tpl
 go 1.23.0
 
 require (
-	github.com/cli/cli/v2 v2.74.0
+	github.com/cli/cli/v2 v2.74.1
 	github.com/cli/go-gh/v2 v2.12.1
 	github.com/go-task/slim-sprig/v3 v3.0.0
 	github.com/spf13/cobra v1.9.1
